@@ -1,0 +1,135 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Registration</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f7fb;
+}
+.container {
+    max-width: 850px;
+    margin: 30px auto;
+    background: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+h2 { text-align: center; color: #003366; }
+
+label { font-weight: bold; margin-top: 15px; display:block; }
+
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+input.error, textarea.error {
+    border: 2px solid red;
+    background: #ffecec;
+}
+
+.note { font-size: 13px; color: #555; }
+
+button {
+    margin-top: 25px;
+    background: #003366;
+    color: white;
+    padding: 12px;
+    width: 100%;
+    border-radius: 5px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+button:hover { background:#0055aa; }
+</style>
+</head>
+
+<body>
+<div class="container">
+<h2> Registration</h2>
+
+<form id="regForm"
+      method="POST"
+      enctype="multipart/form-data"
+      action="{% url 'signup' %}">
+
+    {% csrf_token %}
+
+    <label>Full Name *</label>
+    <input type="text" name="full_name" required>
+
+    <label>Email *</label>
+    <input type="email" name="email" required>
+
+    <label>Phone *</label>
+    <input type="tel" name="phone" required>
+
+    <label>Country *</label>
+    <input type="text" name="country" required>
+
+    <label>Undergraduate Degree Certificate (Upload upto 2 files) *</label>
+    <input type="file" name="ug_certificate" multiple required>
+    <div class="note">At least 1 file is mandatory</div>
+
+    <label>Academic Transcripts (Upload upto 6 files) *</label>
+    <input type="file" name="transcripts" multiple required>
+    <div class="note">At least 1 file is mandatory</div>
+
+    <label>Passport *</label>
+    <input type="file" name="passport" required>
+
+    <label>CV *</label>
+    <input type="file" name="cv" required>
+
+    <label>English Proficiency Proof *</label>
+    <input type="file" name="english_proof" required>
+
+    <label>Reference Letters *</label>
+    <input type="file" name="references" required>
+
+    <label>Statement of Purpose *</label>
+    <textarea name="sop" rows="5" required></textarea>
+
+    <label>Work Experience Certificates</label>
+    <input type="file" name="work_experience">
+
+    <button type="submit">Submit</button>
+</form>
+</div>
+
+<script>
+document.getElementById("regForm").addEventListener("submit", function(e) {
+    let valid = true;
+    const requiredFields = document.querySelectorAll("#regForm [required]");
+
+    requiredFields.forEach(field => {
+        field.classList.remove("error");
+
+        if (field.type === "file" && field.files.length === 0) {
+            valid = false;
+            field.classList.add("error");
+        }
+        if (!field.value && field.type !== "file") {
+            valid = false;
+            field.classList.add("error");
+        }
+    });
+
+    if (!valid) {
+        e.preventDefault();
+        alert("Please fill all required fields.");
+    }
+});
+</script>
+
+</body>
+</html>

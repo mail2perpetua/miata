@@ -1,0 +1,140 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Chapter 1</title>
+
+<style>
+body { font-family: Arial, sans-serif; background:#f4f4f4; padding:20px; }
+
+.container {
+    max-width:1500px;
+    margin:auto;
+    background:rgb(62, 62, 124);
+    padding:60px;
+    border-radius:40px;
+}
+
+h2 { text-align:center; color:white; }
+
+.menu button {
+    width:100%;
+    padding:12px;
+    margin:6px 0;
+    font-size:16px;
+    cursor:pointer;
+    border-radius:10px;
+}
+
+
+.section { display:none; margin-top:20px; }
+
+iframe, video {
+    width:100%;
+    height:500px;
+}
+
+#submitBtn:disabled {
+    background:#ccc;
+    cursor:not-allowed;
+}
+</style>
+</head>
+
+<body oncontextmenu="return false;">
+
+<div class="container">
+<h2>Chapter 1 - BASIC ABDOMINAL ULTRASOUND IMAGING</h2>
+
+<div class="menu">
+<button onclick="showSection('video')">📹 Lecture Video</button>
+<button onclick="showSection('study')">📄 Study Material</button>
+<button onclick="showSection('assessment')">📝 Assessment</button>
+<button onclick="showSection('coursework')">⏳ Course Work</button>
+</div>
+
+<!-- VIDEO -->
+<div id="video" class="section">
+<h3>Lecture Video</h3>
+
+<video controls controlslist="nodownload noplaybackrate" disablePictureInPicture>
+<source src="{% static 'myapp/video/chap1.mp4' %}" type="video/mp4">
+</video>
+
+</div>
+
+<!-- STUDY MATERIAL -->
+<div id="study" class="section">
+<h3>Study Material</h3>
+
+<iframe src="{% static 'myapp/docs/chap1.pdf' %}"></iframe>
+
+<br><br>
+
+
+
+</div>
+
+<!-- ASSESSMENT -->
+<div id="assessment" class="section">
+<h3>Assessment</h3>
+
+<center>
+<a href="{% url 'ass1' %}">
+<button>Start Assessment</button>
+</a>
+</center>
+
+</div>
+
+<!-- COURSE WORK -->
+<div id="coursework" class="section">
+<h3>Course Work Submission</h3>
+
+<p>⏱ Time Remaining: <span id="timer"></span></p>
+
+<form method="post" enctype="multipart/form-data">
+{% csrf_token %}
+<input type="file" name="submission" required><br><br>
+
+<button id="submitBtn" type="submit">Submit</button>
+</form>
+
+</div>
+
+</div>
+
+<script>
+function showSection(id){
+document.querySelectorAll('.section').forEach(s=>s.style.display='none');
+document.getElementById(id).style.display='block';
+}
+
+/* SIMPLE 24 HR TIMER (TEMP TEST VERSION) */
+
+const startTime = Date.now();
+const limit = 24 * 60 * 60 * 1000;
+
+function updateTimer(){
+const now = Date.now();
+const diff = limit - (now - startTime);
+
+if(diff <= 0){
+document.getElementById("timer").innerText = "Time Over";
+document.getElementById("submitBtn").disabled = true;
+return;
+}
+
+const h = Math.floor(diff/3600000);
+const m = Math.floor((diff%3600000)/60000);
+const s = Math.floor((diff%60000)/1000);
+
+document.getElementById("timer").innerText = h+"h "+m+"m "+s+"s";
+}
+
+setInterval(updateTimer,1000);
+</script>
+
+</body>
+</html>
